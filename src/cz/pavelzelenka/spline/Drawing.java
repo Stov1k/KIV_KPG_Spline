@@ -19,7 +19,7 @@ import javafx.scene.shape.StrokeLineJoin;
 /**
  * Kresba
  * @author Pavel Zelenka A16B0176P
- * @version 2018-03-15
+ * @version 2018-04-15
  */
 public class Drawing {
 	

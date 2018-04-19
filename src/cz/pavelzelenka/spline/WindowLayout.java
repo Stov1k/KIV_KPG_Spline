@@ -36,7 +36,7 @@ import javafx.stage.Stage;
 /**
  * Rozvrzeni okna aplikace
  * @author Pavel Zelenka A16B0176P
- * @version 2018-03-09
+ * @version 2018-04-15
  */
 public class WindowLayout {
 

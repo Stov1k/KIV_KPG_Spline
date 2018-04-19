@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 /**
  * Seznam krivek
  * @author Pavel Zelenka
- * @version 2018-03-27
+ * @version 2018-04-15
  */
 public enum SplineType {
 	BSPLINE("B-Spline", new BSpline()),

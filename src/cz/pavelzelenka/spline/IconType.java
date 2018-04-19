@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 /**
  * Ikony
  * @author Pavel Zelenka A16B0176P
- * @version 2018-03-15
+ * @version 2018-04-15
  */
 
 public enum IconType {

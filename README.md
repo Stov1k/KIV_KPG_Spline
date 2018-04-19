@@ -1,2 +1,7 @@
-# KIV_KPG_Spline
-Domácí úkol z KIV/KPG.
+# 6. domácí úkol z KIV/KPG
+## Spline křivka
+
+Adresáře
+- src - Zdrojové kódy aplikace
+- doc - Dokumentace
+
