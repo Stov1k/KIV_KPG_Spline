@@ -41,40 +41,36 @@ public class BSpline implements Spline {
 				}
 			}
 		}
-
-		Point p = null;
-		Point p0 = null;
-		
-		Point a, b, c, d;
-		Point s3, s2, s1, s0;		
-		
-		boolean first = true;
 		
 		Point[] points = inputCopy.stream().toArray(Point[]::new);
 		int n = inputCopy.size();
 
+		Point point = null;
+		Point prev = null;
+		boolean first = true;
+		
 		for(int i=1; i < n-2; i++) {
 			
-			a = new Point(points[i-1].getX(), points[i-1].getY());
-			b = new Point(points[i].getX(), points[i].getY());
-			c = new Point(points[i+1].getX(), points[i+1].getY());
-			d = new Point(points[i+2].getX(), points[i+2].getY());
+			Point a = new Point(points[i-1].getX(), points[i-1].getY());
+			Point b = new Point(points[i].getX(), points[i].getY());
+			Point c = new Point(points[i+1].getX(), points[i+1].getY());
+			Point d = new Point(points[i+2].getX(), points[i+2].getY());
 			
-			s3 = new Point((-a.getX() + 3 * (b.getX() - c.getX()) + d.getX()) / 6, (-a.getY() + 3 * (b.getY() - c.getY()) + d.getY()) / 6 );
-			s2 = new Point((a.getX() - 2 * b.getX() + c.getX()) / 2, (a.getY() - 2 * b.getY() + c.getY()) / 2);
-			s1 = new Point((c.getX() - a.getX()) / 2, (c.getY() - a.getY()) / 2);	
-			s0 = new Point((a.getX() + 4 * b.getX() + c.getX()) / 6, (a.getY() + 4 * b.getY() + c.getY()) / 6);
+			Point s3 = new Point((-a.getX() + 3 * (b.getX() - c.getX()) + d.getX()) / 6, (-a.getY() + 3 * (b.getY() - c.getY()) + d.getY()) / 6 );
+			Point s2 = new Point((a.getX() - 2 * b.getX() + c.getX()) / 2, (a.getY() - 2 * b.getY() + c.getY()) / 2);
+			Point s1 = new Point((c.getX() - a.getX()) / 2, (c.getY() - a.getY()) / 2);	
+			Point s0 = new Point((a.getX() + 4 * b.getX() + c.getX()) / 6, (a.getY() + 4 * b.getY() + c.getY()) / 6);
 			
 			for(int step=0; step <= STEPS; step++) {
-				p0 = p;
+				prev = point;
 				Cubic cubic = new Cubic(s0, s1, s2, s3);
 				double t = (double) step / (double) STEPS;
-				p = cubic.evaluateCubic(t);
+				point = cubic.evaluateCubic(t);
 	            if (first) {
 	            	first = false; 
 	            } else { 
-	            	temp.add(new Point(p0.getX(), p0.getY()));
-	            	temp.add(new Point(p.getX(), p.getY()));
+	            	temp.add(new Point(prev.getX(), prev.getY()));
+	            	temp.add(new Point(point.getX(), point.getY()));
 	            }
 	         }
 		}
