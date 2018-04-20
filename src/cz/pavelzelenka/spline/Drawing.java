@@ -40,8 +40,6 @@ public class Drawing {
 	private GraphicsContext g;
 	/** Platno */
 	private Canvas activeCanvas;
-	/** Bezici animace */
-	private boolean isRunning = false;
 
 	/** Pozadovana sirka pro vykresleni obrazku */
 	private DoubleProperty requiredWidth = new SimpleDoubleProperty(0D);
@@ -468,14 +466,6 @@ public class Drawing {
 		g.restore();
 		redraw();
 		return working;
-	}
-
-	/**
-	 * Vrati, zdali bezi animace
-	 * @return vrati true, bezi-li v tento moment animace
-	 */
-    public boolean isRunning() {
-		return isRunning;
 	}
 	
 }
