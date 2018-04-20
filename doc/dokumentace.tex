@@ -76,6 +76,43 @@ Vykreslování probíhá ve\nobreakspace třídě \emph{Drawing}. Křivky\nobrea
  \caption{Výpočet B-spline křivky}
 \end{algorithm}
 
+\subsection{Kubická spline křivka}
+\paragraph{}
+\begin{algorithm}[H]
+\KwIn{řídící body, počet kroků}
+ bod$[\nobreakspace ]$ = kopie seznamu řídících bodů\;
+ n$[\nobreakspace ]$ = počet řídících bodů-1\;
+ gamma$[\nobreakspace ]$ = pole čísel velikosti n+1\;
+ delta$[\nobreakspace ]$ = pole bodů velikosti n+1\;
+ D$[\nobreakspace ]$ = pole bodů velikosti n+1\;
+ gamma$[0]$ = 0.5\;
+ \For{i = 1; i $<$ n; i+1} {
+   gamma$[i]$ = $\frac{1}{4 - gamma[i-1]}$ \;
+ }
+ gamma$[n]$ = $\frac{1}{2 - gamma[n-1]}$\;
+ delta$[0]$ = nový bod $[ 3 \cdot (bod[1]_x - bod[0]_x) \cdot gamma[0], $ \\ \nobreakspace \nobreakspace \nobreakspace \nobreakspace \nobreakspace $  3 \cdot (bod[1]_y - bod[0]_y) \cdot gamma[0] ] $\; 
+ \For{i = 1; i $<$ n; i+1} {
+    delta$[i]$ = nový bod $[ 3 \cdot (bod[i+1]_x - bod[i-1]_x) - delta[i-1]_x \cdot gamma[i],$ \\ \nobreakspace \nobreakspace \nobreakspace \nobreakspace \nobreakspace $ 3 \cdot (bod[i+1]_y - bod[i-1]_y) - delta[i-1]_y \cdot gamma[i] ] $\;
+ }
+ delta$[n]$ = nový bod $[ 3 \cdot (bod[n]_x - bod[n-1]_x - delta[n-1]_x) \cdot gamma[n],$ \\ \nobreakspace \nobreakspace \nobreakspace \nobreakspace \nobreakspace $ 3 \cdot (bod[n]_y - bod[n-1]_y - delta[n-1]_y) \cdot gamma[n]] $\;
+ \For{i = n; i $>=$ 0; i-1} {
+ 	D$[i]$ = nový bod $[delta[i]_x - gamma[i] \cdot D[i + 1]_x, delta[i]_y - gamma[i] \cdot D[i + 1]_y] $
+ }
+ \For{i = 1; i $<$ n; i+1} {
+   a = nový bod $[bod[i]_x, bod[i]_y]$ \;
+   b = nový bod $[D[i]_x, D[i]_y]$ \;
+   c = nový bod $[ 3 \cdot (bod[i+1]_x - bod[i]_x) - 2 \cdot D[i]_x - D[i+1]_x,$ \\ \nobreakspace \nobreakspace \nobreakspace \nobreakspace \nobreakspace $ 3 \cdot (bod[i+1]_y - bod[i]_y) - 2 \cdot D[i]_y - D[i+1]_y ]$\;
+   d = nový bod $[ 2 \cdot (bod[i]_x - bod[i+1]_x) + D[i]_x + D[i+1]_x,$ \\ \nobreakspace \nobreakspace \nobreakspace \nobreakspace \nobreakspace $ 2 \cdot (bod[i]_y - bod[i+1]_y) + D[i]_y + D[i+1]_y ]$\;
+ \For{krok = 0; krok $<=$ počet kroků; krok+1} {
+   t = krok / počet kroků\;
+   nový bod = $\left[ a_x + t \cdot \left( b_x + t \cdot \left( c_x + t \cdot d_x \right) \right), a_y + t \cdot \left( b_y + t \cdot \left( c_y + t \cdot d_y \right) \right) \right] $\;
+   přidat nový bod do křivky\;
+  }
+ }
+ \Return{křivka}
+ \caption{Výpočet kubické spline křivky}
+\end{algorithm}
+
 \newpage
 \section{Uživatelská dokumentace}
 
