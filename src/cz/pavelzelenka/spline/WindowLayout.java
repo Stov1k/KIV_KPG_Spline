@@ -109,7 +109,7 @@ public class WindowLayout {
 		Label lineWidthLabel = new Label("Line Width:");
 		Slider lineWidthSlider = new Slider(); 
 		lineWidthSlider.setMin(1);
-		lineWidthSlider.setMax(12);
+		lineWidthSlider.setMax(14);
 		lineWidthSlider.setValue(drawing.getLineWidth());
 		lineWidthSlider.setBlockIncrement(1);
 		
