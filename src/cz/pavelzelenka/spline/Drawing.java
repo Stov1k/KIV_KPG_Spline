@@ -211,7 +211,7 @@ public class Drawing {
 				}
 				g.strokeLine(prev.getX(), prev.getY(), p.getX(), p.getY());
 			}
-			g.fillOval(p.getX()-hps, p.getY()-hps, 10, 10);
+			g.fillOval(p.getX()-hps, p.getY()-hps, ps, ps);
 			prev = p;
 		}
 	}
