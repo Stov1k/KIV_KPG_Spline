@@ -15,6 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
@@ -27,6 +28,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
@@ -90,21 +92,28 @@ public class WindowLayout {
 	 * @return spodni panel
 	 */
 	public Parent getBottomPane() {	
-		HBox hBox = new HBox();
-		hBox.setPadding(new Insets(5D, 5D, 5D, 5D));
-		hBox.setMinHeight(40D);
-		hBox.setAlignment(Pos.CENTER);
-		hBox.setSpacing(5D);
-		hBox.setStyle("-fx-font-size: 9pt;");
+		GridPane gridPane = new GridPane();
+		gridPane.setPadding(new Insets(5D, 5D, 5D, 5D));
+		gridPane.setMinHeight(40D);
+		gridPane.setAlignment(Pos.CENTER);
+		gridPane.setHgap(5D);
+		gridPane.setVgap(5D);
+		gridPane.setStyle("-fx-font-size: 9pt;");
 		
 		Label splineLabel = new Label("Spline:");
 		ChoiceBox<SplineType> splineChoiceBox = new ChoiceBox<SplineType>(SplineType.getDefaultList());
 		splineChoiceBox.getSelectionModel().select(drawing.getSpline());
 		
 		Label colorLabel = new Label("Color:");
+		HBox colorBox = new HBox();
+		colorBox.setAlignment(Pos.CENTER);
+		colorBox.setSpacing(5D);
 		ColorPicker colorPicker = new ColorPicker();
 		colorPicker.setValue(drawing.getSplineColor());
 		colorPicker.setPrefWidth(50D);
+		CheckBox rainbowColor = new CheckBox("Rainbow");
+		rainbowColor.setSelected(drawing.isRainbowColor());
+		colorBox.getChildren().addAll(colorPicker, rainbowColor);
 		
 		Label lineWidthLabel = new Label("Line Width:");
 		Slider lineWidthSlider = new Slider(); 
@@ -113,16 +122,43 @@ public class WindowLayout {
 		lineWidthSlider.setValue(drawing.getLineWidth());
 		lineWidthSlider.setBlockIncrement(1);
 		
+		Label pointSizeLabel = new Label("Point Size:");
+		Slider pointSizeSlider = new Slider(); 
+		pointSizeSlider.setMin(8);
+		pointSizeSlider.setMax(20);
+		pointSizeSlider.setValue(drawing.getLineWidth());
+		pointSizeSlider.setBlockIncrement(1);
+		
 		Pane pane = new Pane();
-		HBox.setHgrow(pane, Priority.ALWAYS);
+		GridPane.setHgrow(pane, Priority.ALWAYS);
 		
 		Button clearButton = new Button("Clear");
+		clearButton.setMaxHeight(5000D);
 		
-		hBox.getChildren().addAll(splineLabel, splineChoiceBox, colorLabel, colorPicker, lineWidthLabel, lineWidthSlider, pane, clearButton);
+		gridPane.add(splineLabel, 0, 0);
+		gridPane.add(splineChoiceBox, 1, 0);
+		
+		gridPane.add(colorLabel, 0, 1);
+		gridPane.add(colorBox, 1, 1);
+		
+		gridPane.add(lineWidthLabel, 3, 0);
+		gridPane.add(lineWidthSlider, 4, 0);
+		gridPane.add(pointSizeLabel, 3, 1);
+		gridPane.add(pointSizeSlider, 4, 1);		
+		
+		gridPane.add(pane, 5, 0);
+		
+		gridPane.add(clearButton, 6, 0, 1, 2);
 		
 		clearButton.setOnAction(action -> {
 			if(drawing != null) {
 				drawing.throwOutSpline();
+			}
+		});
+		
+		rainbowColor.selectedProperty().addListener((observable, oldValue, newValue) -> {
+			if(newValue != null) {
+				drawing.setRainbowColor(newValue);;
 			}
 		});
 		
@@ -140,13 +176,21 @@ public class WindowLayout {
 			}
 		});
 		
+		pointSizeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+			if(drawing != null) {
+				if(newValue != null) {
+					drawing.setPointSize(newValue.doubleValue());
+				}
+			}
+		});
+		
 		colorPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
 			if(newValue != null) {
 				drawing.setSplineColor(newValue);
 			}
 		});
 		
-		return hBox;
+		return gridPane;
 	}
 	
 	/**

@@ -34,8 +34,12 @@ public class Drawing {
 	
 	/** Barva krivky */
 	private Color splineColor = Color.rgb(41, 128, 185);
+	/** Duhova barva */
+	private boolean rainbowColor = false;
 	/** Sirka cary */
 	private double lineWidth = 2D;
+	/** velikost bodu */
+	private double pointSize = 10D;
 	/** Ovladaci prvek kresleni */
 	private GraphicsContext g;
 	/** Platno */
@@ -173,6 +177,8 @@ public class Drawing {
 	public void drawSpline() {
 		List<Point> line = spline.getSpline().getOutputPoints(points);
 		Point prev = null;
+		int n = line.size();
+		int i = 0;
 		for(Point p : line) {
 			if(prev == null) {
 				prev = p;
@@ -182,11 +188,15 @@ public class Drawing {
 			g.setLineJoin(StrokeLineJoin.ROUND);
 			g.setLineCap(StrokeLineCap.ROUND);
 			g.setLineWidth(lineWidth);
-			g.setStroke(splineColor);
-			g.setFill(Color.rgb(52, 152, 219));
+			if(this.rainbowColor) {
+				g.setStroke(getRainbowColor(i, n, 1D, 0.8D));
+			} else {
+				g.setStroke(splineColor);
+			}
 			g.strokeLine(prev.getX(), prev.getY(), p.getX(), p.getY());
 			g.setLineWidth(prevWidth);
 			prev = p;
+			i++;
 		}
 	}
 	
@@ -194,7 +204,7 @@ public class Drawing {
 	 * Vykresleni bodu
 	 */
 	public void drawPoints() {
-		double ps = 10D;			// Point Size
+		double ps = pointSize;		// Point Size
 		double hps = ps/2;			// Half Point Size
 		Point prev = null;
 		for(Point p : points) {
@@ -241,9 +251,9 @@ public class Drawing {
 	 * Akce tazeni mysi
 	 */
 	public void mouseDragged() {
-		double ps = 12D;			// Point Size
-		double hps = ps/2;			// Half Point Size
 		activeCanvas.setOnMouseDragged(event -> {
+			double ps = pointSize;		// Point Size
+			double hps = ps/2;			// Half Point Size
 			for(Point p : points) {
 				if(p.getX()-hps <= event.getX() && p.getX()+hps >= event.getX()) {
 					if(p.getY()-hps <= event.getY() && p.getY()+hps >= event.getY()) {
@@ -270,9 +280,9 @@ public class Drawing {
 	 * Akce kliknuti mysi
 	 */
 	public void mouseClicked() {
-		double ps = 12D;			// Point Size
-		double hps = ps/2;			// Half Point Size
 		activeCanvas.setOnMouseClicked(event -> {
+			double ps = pointSize;		// Point Size
+			double hps = ps/2;			// Half Point Size
 			if(event.getButton().equals(MouseButton.PRIMARY)) {
 				boolean select = false;
 				for(Point p : points) {
@@ -310,6 +320,37 @@ public class Drawing {
 	}
 	
 	/**
+	 * Vrati barvu
+	 * @param position aktualni pozice
+	 * @param total celkovy pocet pozic
+	 * @param saturation sytost
+	 * @param brightness svetlost
+	 * @return barva
+	 */
+	public Color getRainbowColor(int position, int total, double saturation, double brightness) {
+    	double hue = Math.floor((double)position * 360D/(double)(total));
+    	Color color = Color.hsb(hue, saturation, brightness);
+    	return color;
+	}
+	
+	/**
+	 * Vrati, zdali je nastavena duhova barva
+	 * @return vrati TRUE, kdyz je nastavena duhova barva
+	 */
+	public boolean isRainbowColor() {
+		return rainbowColor;
+	}
+
+	/**
+	 * Nastavi duhovou barvu
+	 * @return duhova barva krivky
+	 */
+	public void setRainbowColor(boolean rainbowColor) {
+		this.rainbowColor = rainbowColor;
+		redraw();
+	}
+
+	/**
 	 * Vrati barvu krivky
 	 * @return barva krivky
 	 */
@@ -328,7 +369,7 @@ public class Drawing {
 
 	/**
 	 * Vrati sirku cary
-	 * @return  sirka cary
+	 * @return sirka cary
 	 */
 	public double getLineWidth() {
 		return lineWidth;
@@ -340,6 +381,23 @@ public class Drawing {
 	 */
 	public void setLineWidth(double lineWidth) {
 		this.lineWidth = lineWidth;
+		redraw();
+	}
+	
+	/**
+	 * Vrati sirku bodu
+	 * @return sirka bodu
+	 */
+	public double getPointSize() {
+		return pointSize;
+	}
+
+	/**
+	 * Nastavi sirku bodu
+	 * @param pointSize sirka bodu
+	 */
+	public void setPointSize(double pointSize) {
+		this.pointSize = pointSize;
 		redraw();
 	}
 	

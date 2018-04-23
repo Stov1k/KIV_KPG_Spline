@@ -15,7 +15,7 @@ import cz.pavelzelenka.spline.Point;
  */
 public class NaturalCubicSpline implements Spline {
 	
-	public static final int STEPS = 25;
+	public static final int STEPS = 50;
 	
 	private List<Point> input;
 	private List<Point> output;
